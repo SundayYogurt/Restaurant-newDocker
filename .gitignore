@@ -60,3 +60,8 @@ backend/dist/
 
 
 .env
+
+role.model.js
+user.model.js
+
+auth.config.js
