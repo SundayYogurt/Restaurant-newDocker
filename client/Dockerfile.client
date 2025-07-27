@@ -1,0 +1,18 @@
+FROM node:22-alpine
+
+WORKDIR /app 
+#สร้าง folder app ใน container
+
+COPY package*.json ./
+#copy package#.json * คืออะไรก็ได้ที่ตามหลังด้วย json
+
+RUN npm install
+
+COPY . .
+# . ที่ 1 คือ client . ที่สอง คือ /app
+
+EXPOSE  5173
+# เปิด port ให้ container เชื่อมต่อ port ภายนอก
+
+CMD [ "npm", "run", "dev" ]
+#คำสั่งไว้ รัน dev ใช้ cmd

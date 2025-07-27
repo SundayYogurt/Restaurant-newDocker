@@ -1,0 +1,4 @@
+/* ใช้ DaisyUI plugin */
+@plugin "daisyui";
+/* import tailwindcss utility */
+@import "tailwindcss";

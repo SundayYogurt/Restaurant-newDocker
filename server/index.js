@@ -2,7 +2,7 @@ const express = require('express') // เรียกใช้ express สำห
 const dotenv  = require('dotenv')  // เรียกใช้ dotenv เพื่อโหลด environment variables จากไฟล์ .env
 const app = express()              // สร้าง instance ของ express app
 dotenv.config();                   // โหลดค่าตัวแปรจากไฟล์ .env เข้าสู่ process.env
-
+const cors = require('cors')
 const PORT = process.env.PORT || 3000; // กำหนด port ที่จะใช้รัน server
 
 const restaurantRouter = require("./routers/restaurant.router") // import router สำหรับ restaurant API
@@ -24,6 +24,11 @@ db.sequelize.sync({force: true}).then(()=>{
    console.log("Drop and Sync")        // log เมื่อ sync สำเร็จ
 })
 
+app.use(cors({
+  origin:["http://localhost:5173","127.0.0.1:5173"],
+  methods:["GET","POST","PUT","DELETE"],
+  allowedHeaders:["Content-Type","Authorization"]
+}))
 app.use(express.json())                // Middleware สำหรับแปลง request body เป็น json
 app.use(express.urlencoded({ extended: true})) // Middleware สำหรับแปลง urlencoded เป็น json
 

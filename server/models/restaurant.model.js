@@ -22,10 +22,10 @@ const Restaurant = sequelize.define("restaurant", {
     }
 })// สร้าง schema หรือโครงสร้างของข้อมูล
 
-Restaurant.sync({force: false}).then(()=>{
-    console.log("Table created or already exists") // log เมื่อสร้าง table สำเร็จ
-}).catch((error)=>{
-    console.log("Error creating table", error);    // log เมื่อเกิด error
-})
+// Restaurant.sync({force: false}).then(()=>{
+//     console.log("Table created or already exists") // log เมื่อสร้าง table สำเร็จ
+// }).catch((error)=>{
+//     console.log("Error creating table", error);    // log เมื่อเกิด error
+// })
 
 module.exports = Restaurant // ส่งออก model restaurant
