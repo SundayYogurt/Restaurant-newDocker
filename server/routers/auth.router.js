@@ -1,10 +1,12 @@
-const authController = require("../controllers/auth.controller")
+const authController = require("../controllers/auth.controller") // import controller สำหรับ auth
 
-const express = require("express");
-const router = express.Router();
+const express = require("express"); // import express
+const router = express.Router();    // สร้าง router object
 
-//POST http://localhost:3000/api/v1/register/signup
-router.post("/signup",authController.signUp);
+// POST สมัครสมาชิก
+router.post("/signup",authController.signUp); // path /api/v1/register/signup
 
-router.post("/signin",authController.signIn);
-module.exports = router;
+// POST เข้าสู่ระบบ
+router.post("/signin",authController.signIn); // path /api/v1/register/signin
+
+module.exports = router; // ส่งออก router

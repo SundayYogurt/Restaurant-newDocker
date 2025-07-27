@@ -1,14 +1,15 @@
-const Restaurant = require("../models/restaurant.model.js")
-const restaurantController = {};
-//Create and save a new restaurant
+const Restaurant = require("../models/restaurant.model.js") // import model restaurant
+const restaurantController = {}; // สร้าง object สำหรับ controller
+
+// สร้างและบันทึกร้านอาหารใหม่
 restaurantController.create = async (req, res) => {
-    const { name, type, imageUrl } = req.body;
+    const { name, type, imageUrl } = req.body; // รับข้อมูลจาก body
     //validate data
-    if (!name || !type || !imageUrl) {
+    if (!name || !type || !imageUrl) {         // ตรวจสอบข้อมูลครบหรือไม่
         res.status(400).send({ message: "Name, Type or ImageUrl can't be empty!" });
         return;
     }
-    await Restaurant.findOne({ where: { name } }).then((restaurant) => {
+    await Restaurant.findOne({ where: { name } }).then((restaurant) => { // ตรวจสอบชื่อซ้ำ
         if (restaurant) {
             res.status(400).send({ message: "Restaurant already exists!" });
         }
@@ -18,7 +19,7 @@ restaurantController.create = async (req, res) => {
             imageUrl
         }
 
-        Restaurant.create(newRestaurant).then((data) => {
+        Restaurant.create(newRestaurant).then((data) => { // สร้างร้านอาหารใหม่
             res.send(data);
         }).catch((error) => {
             res.status(500).send({ message: error.message || "Something error while creating a restaurant" })
@@ -26,7 +27,7 @@ restaurantController.create = async (req, res) => {
     })
 };
 
-//getAll Restaurant
+// ดึงข้อมูลร้านอาหารทั้งหมด
 restaurantController.getAll = async (req, res) => {
     await Restaurant.findAll().then((data) => {
         res.send(data);
@@ -35,7 +36,7 @@ restaurantController.getAll = async (req, res) => {
     })
 }
 
-//get Restaurant by id
+// ดึงข้อมูลร้านอาหารตาม id
 restaurantController.getById = async (req, res) => {
     const id = req.params.id;
     await Restaurant.findByPk(id).then((data) => {
@@ -51,6 +52,7 @@ restaurantController.getById = async (req, res) => {
     })
 }
 
+// แก้ไขข้อมูลร้านอาหารตาม id
 restaurantController.updateById = async (req, res) => {
     try {
         const id = req.params.id;
@@ -76,6 +78,7 @@ restaurantController.updateById = async (req, res) => {
     }
 }
 
+// ลบร้านอาหารตาม id
 restaurantController.deleteById = async (req,res) => {
 
     const id = req.params.id
@@ -94,6 +97,5 @@ restaurantController.deleteById = async (req,res) => {
     })
 }
 
-
-module.exports = restaurantController;
+module.exports = restaurantController; // ส่งออก controller
 

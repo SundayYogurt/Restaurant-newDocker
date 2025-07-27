@@ -1,21 +1,21 @@
-const restaurantController = require("../controllers/restaurant.controller")
+const restaurantController = require("../controllers/restaurant.controller") // import controller สำหรับ restaurant
 
-const express = require("express")
-const router = express.Router();
+const express = require("express") // import express
+const router = express.Router();   // สร้าง router object
 
-//POST http://localhost:3000/api/v1/restaurant
+// POST เพิ่มร้านอาหารใหม่
 router.post("/",restaurantController.create);
 
-//GET http://localhost:3000/api/v1/restaurant
+// GET ดึงข้อมูลร้านอาหารทั้งหมด
 router.get("/",restaurantController.getAll);
 
-//GET BY ID http://localhost:3000/api/v1/restaurant/:id
+// GET ดึงข้อมูลร้านอาหารตาม id
 router.get("/:id",restaurantController.getById);
 
-//GET BY ID http://localhost:3000/api/v1/restaurant/:id
+// PUT แก้ไขข้อมูลร้านอาหารตาม id
 router.put("/:id",restaurantController.updateById);
 
-//DELETE BY ID http://localhost:3000/api/v1/restaurant/:id
+// DELETE ลบร้านอาหารตาม id
 router.delete("/:id",restaurantController.deleteById);
 
-module.exports = router
+module.exports = router // ส่งออก router
