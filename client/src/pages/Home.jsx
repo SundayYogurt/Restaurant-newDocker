@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Restaurant from "../components/Restaurant";
+import RestaurantService from "../services/restaurant.service"
 
 // คอมโพเนนต์ Home สำหรับแสดงร้านอาหารและค้นหา
 const Home = () => {
@@ -8,12 +9,12 @@ const Home = () => {
 
   // ฟังก์ชัน handleSearch สำหรับค้นหาร้านอาหารตาม keyword
   const handleSearch = (keyword) => {
-    if( keyword === ""){
+    if (keyword === "") {
       setFilterRestaurant(restaurants)
       return
     }
     // กรองร้านอาหารที่ name หรือ type ตรงกับ keyword
-    const result = restaurants.filter((restaurant)=>{
+    const result = restaurants.filter((restaurant) => {
       return (
         restaurant.name.toLocaleLowerCase().includes(keyword.toLocaleLowerCase()) ||
         restaurant.type.toLocaleLowerCase().includes(keyword.toLocaleLowerCase())
@@ -26,20 +27,27 @@ const Home = () => {
   const [restaurants, setRestaurants] = useState([]);
 
   // ดึงข้อมูลร้านอาหารจาก API เมื่อ component mount
-  useEffect(() => {
-    
-    fetch("http://localhost:3000/api/v1/restaurant") // เปลี่ยน port ให้ตรงกับ API ที่รันอยู่จริง
-      .then((res) => {
-        return res.json();
-      })
-      .then((resp) => {
-        setRestaurants(resp);
-        setFilterRestaurant(resp)
-      })
-      .catch((e) => {
-        console.log(e.message);
-      });
-  }, []);
+useEffect(() => {
+    // call api: GetAllRestaurants
+    const getAllRestaurant = async () => {
+      try{
+        const response = await RestaurantService.getAllRestaurants()
+        console.log(response)
+        if (response.status === 200) {
+          setRestaurants(response.data)
+          setFilterRestaurant(response.data)
+        }
+      }catch(error) {
+        Swal.fire({
+          title: "Get All restaurants",
+          icon: "error",
+          text: error?.response?.data?.message || error.message
+        })
+      }
+    }
+    getAllRestaurant()
+
+  }, [])
 
   // ส่วนของการแสดงผล UI
   return (

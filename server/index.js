@@ -19,10 +19,10 @@ const initRole = () => {
 }
 
 // sync schema กับฐานข้อมูล (force: true จะลบและสร้างใหม่ทุกครั้ง)
-db.sequelize.sync({force: true}).then(()=>{
-   initRole();                         // สร้าง role เริ่มต้น
-   console.log("Drop and Sync")        // log เมื่อ sync สำเร็จ
-})
+// db.sequelize.sync({force: true}).then(()=>{
+//    initRole();                         // สร้าง role เริ่มต้น
+//    console.log("Drop and Sync")        // log เมื่อ sync สำเร็จ
+// })
 
 app.use(cors({
   origin:["http://localhost:5173","127.0.0.1:5173"],

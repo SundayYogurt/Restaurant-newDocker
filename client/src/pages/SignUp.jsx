@@ -37,15 +37,15 @@ export default function RegisterForm() {
       const data = await res.json();
 
       if (res.ok) {
-        setMessage("✅ สมัครสมาชิกสำเร็จ! กำลังนำคุณไปหน้า Login...");
+        setMessage("สมัครสมาชิกสำเร็จ! กำลังนำคุณไปหน้า Login...");
         setTimeout(() => {
           navigate("/signin");
         }, 1500);
       } else {
-        setMessage(`❌ สมัครไม่สำเร็จ: ${data.message || "เกิดข้อผิดพลาด"}`);
+        setMessage(` สมัครไม่สำเร็จ: ${data.message || "เกิดข้อผิดพลาด"}`);
       }
     } catch (err) {
-      setMessage("❌ เกิดข้อผิดพลาดในการเชื่อมต่อ");
+      setMessage(" เกิดข้อผิดพลาดในการเชื่อมต่อ");
     }
   };
 
