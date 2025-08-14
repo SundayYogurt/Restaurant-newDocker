@@ -1,42 +1,50 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
+import AuthService from "../services/auth.service";
+import Swal from "sweetalert2";
 
 export default function LoginForm() {
+  const navigate = useNavigate()
   const [loginData, setLoginData] = useState({
     username: '',
     password: ''
   });
 
   const handleChange = (e) => {
+    // {} this is restructuring
     const { name, value } = e.target;
+    // ... copy old LoginData && name: value = new value
     setLoginData({ ...loginData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+  e.preventDefault(); // กัน browser ส่ง GET แล้วเปลี่ยน URL
   console.log("Login data:", loginData);
 
+
   try {
-    const response = await fetch("http://localhost:3000/api/v1/register/signin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(loginData)
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-      alert("Login successful!");
-      console.log("Result from server:", result);
-      // ทำ redirect หรือเก็บ token ได้ที่นี่
-    } else {
-      const err = await response.json();
-      alert("Login failed: " + err.message);
+    const currentUser = await AuthService.login(loginData.username, loginData.password)
+    if(currentUser.status === 200){
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "login สำเร็จ!",
+        text: "Login successfully",
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        navigate("/")
+      })
     }
-
   } catch (error) {
-    console.error("Login error:", error);
-    alert("An error occurred while logging in.");
+    Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: "User login",
+        text: error?.response?.data?.message || error.message ,
+        showConfirmButton: false,
+        timer: 1500
+    })
   }
 };
 
@@ -54,7 +62,7 @@ export default function LoginForm() {
           </h2>
         </div>
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit} >
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700">
               Username

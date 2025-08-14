@@ -11,12 +11,17 @@ import { RouterProvider } from "react-router";
 // นำเข้า Navbar component
 import Navbar from "./components/Navbar.jsx"
 
+import { AuthProvider } from "./context/AuthContext.jsx";
+
+
 // สร้าง root และ render แอป
 createRoot(document.getElementById("root")).render(
   <StrictMode>
+    <AuthProvider>
     {/* Navbar จะแสดงทุกหน้า */}
     <Navbar />
     {/* RouterProvider ใช้สำหรับจัดการเส้นทาง (route) */}
+    </AuthProvider>
     <RouterProvider router={router}/>
   </StrictMode>
 );

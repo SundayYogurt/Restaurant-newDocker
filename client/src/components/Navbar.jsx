@@ -1,7 +1,10 @@
 import React from "react";
-
+import { useAuthContext } from "../context/AuthContext";
+import UserProfile from "./UserProfile";
 // Navbar component สำหรับแสดงเมนูนำทาง
 const Navbar = () => {
+
+  const { user } = useAuthContext();
   // รายการเมนู
   const menuItems = [
     { name: "Add Restaurant", url: "/add" },
@@ -60,10 +63,14 @@ const Navbar = () => {
       </div>
       {/* Navbar ขวา (ปุ่ม Register/Login) */}
       <div className="navbar-end space-x-2.5">
-        <a href="/signup"><button className="btn btn-soft btn-primary">Register</button></a>
-        <a href="/signin"><button className="btn btn-soft btn-accent">Login</button></a>
+
+        {user ? (<UserProfile />) :
+          (<div><a href="/signup"><button className="btn btn-soft btn-primary">Register</button></a>
+            <a href="/signin"><button className="btn btn-soft btn-accent">Login</button></a></div>)}
+
+
       </div>
-    </div>
+    </div >
   );
 };
 

@@ -1,3 +1,4 @@
+
 const express = require('express') // เรียกใช้ express สำหรับสร้าง web server
 const dotenv  = require('dotenv')  // เรียกใช้ dotenv เพื่อโหลด environment variables จากไฟล์ .env
 const app = express()              // สร้าง instance ของ express app
@@ -27,13 +28,14 @@ const initRole = () => {
 app.use(cors({
   origin:["http://localhost:5173","127.0.0.1:5173"],
   methods:["GET","POST","PUT","DELETE"],
-  allowedHeaders:["Content-Type","Authorization"]
+  allowedHeaders:["Content-Type","Authorization","x-access-token"]
 }))
 app.use(express.json())                // Middleware สำหรับแปลง request body เป็น json
 app.use(express.urlencoded({ extended: true})) // Middleware สำหรับแปลง urlencoded เป็น json
 
 app.use('/api/v1/restaurant' ,restaurantRouter); // กำหนด router สำหรับ path /api/v1/restaurant
-app.use('/api/v1/register', authRouter)          // กำหนด router สำหรับ path /api/v1/register
+app.use('/api/v1/auth', authRouter)          // กำหนด router สำหรับ path /api/v1/auth
+
 
 app.get('/', (req, res) => { // route หลัก (root) สำหรับเช็คว่า server ทำงาน
   res.send('Restful API')    // ส่งข้อความกลับ
