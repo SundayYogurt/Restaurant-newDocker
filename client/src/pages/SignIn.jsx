@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import AuthService from "../services/auth.service";
+import { useAuthContext } from "../context/AuthContext";
 import Swal from "sweetalert2";
 
 export default function LoginForm() {
@@ -9,6 +10,13 @@ export default function LoginForm() {
     username: '',
     password: ''
   });
+
+  const {login, user} =  useAuthContext();
+  useEffect(()=>{
+    if(user){
+       navigate("/")
+    } 
+  },[user])
 
   const handleChange = (e) => {
     // {} this is restructuring
@@ -33,6 +41,7 @@ export default function LoginForm() {
         showConfirmButton: false,
         timer: 1500
       }).then(() => {
+        login(currentUser.data)
         navigate("/")
       })
     }

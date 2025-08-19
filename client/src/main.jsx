@@ -21,7 +21,10 @@ createRoot(document.getElementById("root")).render(
     {/* Navbar จะแสดงทุกหน้า */}
     <Navbar />
     {/* RouterProvider ใช้สำหรับจัดการเส้นทาง (route) */}
-    </AuthProvider>
+    
     <RouterProvider router={router}/>
+
+    </AuthProvider>
+    
   </StrictMode>
 );

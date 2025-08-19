@@ -9,8 +9,9 @@ const Navbar = () => {
   const menuItems = [
     { name: "Add Restaurant", url: "/add" },
     { name: "Update", url: "/update/:id" },
-    { name: "About Us", url: "/update" }
+    { name: "Home", url: "/" }
   ];
+
   return (
     <div className="navbar bg-base-100 shadow-sm">
       {/* Navbar ซ้าย (โลโก้ + dropdown) */}
@@ -39,11 +40,23 @@ const Navbar = () => {
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
           >
-            {menuItems.map((item, i) => (
+            
+            {(user?.authorities.includes("ROLES_ADMIN")) && menuItems.map((item, i) => (
               <li key={i}>
                 <a href={item.url}>{item.name}</a>
               </li>
             ))}
+            {(user?.authorities.includes("ROLES_MODERATOR")) && (
+            <li >
+              <a href ={menuItems[1].url}>{menuItems[1].name}</a>
+            </li>
+          )}
+
+          {(user?.authorities.includes("ROLES_USER")) && (
+            <li >
+               <a href ={menuItems[2].url}>{menuItems[2].name}</a>
+            </li>
+          )}
           </ul>
         </div>
         {/* โลโก้ */}
@@ -54,18 +67,30 @@ const Navbar = () => {
       {/* Navbar กลาง (desktop menu) */}
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
-          {menuItems.map((item, idx) => (
+          {(user?.authorities.includes("ROLES_ADMIN")) && menuItems.map((item, idx) => (
             <li key={idx}>
               <a href={item.url}>{item.name}</a>
             </li>
           ))}
+
+          {(user?.authorities.includes("ROLES_MODERATOR")) && (
+            <li >
+              <a href ={menuItems[1].url}>{menuItems[1].name}</a>
+            </li>
+          )}
+
+          {(user?.authorities.includes("ROLES_USER")) && (
+            <li >
+               <a href ={menuItems[2].url}>{menuItems[2].name}</a>
+            </li>
+          )}
         </ul>
       </div>
       {/* Navbar ขวา (ปุ่ม Register/Login) */}
       <div className="navbar-end space-x-2.5">
 
         {user ? (<UserProfile />) :
-          (<div><a href="/signup"><button className="btn btn-soft btn-primary">Register</button></a>
+          (<div className="flex gap-5"><a href="/signup"><button className="btn btn-soft btn-primary">Register</button></a>
             <a href="/signin"><button className="btn btn-soft btn-accent">Login</button></a></div>)}
 
 

@@ -1,36 +1,37 @@
-import api from "./api"
+import api from "./api";
 const RESTAU_API = import.meta.env.VITE_RESTAU_API;
 
-//get all restaurant
+// get all restaurants
 const getAllRestaurants = async () => {
-    return await api.get(RESTAU_API)
-}
+  return await api.get(RESTAU_API);
+};
 
-//get restaurant by Id
+// get restaurant by Id
 const getRestaurantById = async (id) => {
-    return await api.get(`${RESTAU_API}/${id}`)
-}
+  return await api.get(`${RESTAU_API}/${id}`);
+};
 
-//update restaurant by Id
-const editRestaurantById = async (id) => {
-    return await api.put(`${RESTAU_API}/${id}`)
-}
-//add restaurant 
-const insertRestaurant = async () => {
-    return await api.post(RESTAU_API)
-}
+// update restaurant by Id
+const editRestaurantById = async (id, data) => {
+  return await api.put(`${RESTAU_API}/${id}`, data);
+};
 
-//delete restaurants
-const deleteRestaurant = async () => {
-    return await api.delete(RESTAU_API)
-}
+// add restaurant
+const insertRestaurant = async (data) => {
+  return await api.post(RESTAU_API, data);
+};
+
+// delete restaurant by Id
+const deleteRestaurant = async (id) => {
+  return await api.delete(`${RESTAU_API}/${id}`);
+};
 
 const RestaurantService = {
-    getAllRestaurants,
-    getRestaurantById,
-    editRestaurantById,
-    deleteRestaurant,
-    insertRestaurant
-}
+  getAllRestaurants,
+  getRestaurantById,
+  editRestaurantById,
+  deleteRestaurant,
+  insertRestaurant
+};
 
-export default RestaurantService
+export default RestaurantService;

@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 import React, { useState, useEffect } from "react";
-
-
+import Swal from 'sweetalert2'
+import RestaurantService from "../services/restaurant.service";
 const Update = () => {
 
   // 1. ดึง id จาก url ด้วย useParams
@@ -16,52 +16,65 @@ const Update = () => {
 
   // 2. ดึงข้อมูลร้านอาหารจาก API ตาม id เมื่อ id เปลี่ยน
   useEffect(() => {
-    fetch("http://localhost:3000/api/v1/restaurant/" + id)
-      .then((res) => {
-        // แปลง response เป็น json
-        return res.json();
-      })
-      .then((resp) => {
-        // บันทึกข้อมูลร้านอาหารลงใน state
-        setRestaurant(resp);
-      })
-      // กรณีเกิด error ให้แสดงใน console
-      .catch((e) => {
-        console.log(e.message);
-      });
+    const getRestaurant = async () => {
+      try {
+        const response = await RestaurantService.getRestaurantById(id);
+        if (response.status === 200) {
+          setRestaurant(response.data);
+        }
+      } catch (error) {
+        Swal.fire({
+          title: "Get restaurant failed",
+          icon: "error",
+          text: error?.response?.data?.message || error.message
+        });
+      }
+    };
+    getRestaurant();
   }, [id]);
 
 
+
   const handleChange = (e) => {
+    e.preventDefault();
     const { name, value } = e.target;
     setRestaurant({ ...restaurant, [name]: value });
   };
 
-  const handleSubmit = async () => {
-    // เริ่มการรอ
-    try {
-      const response = await fetch("http://localhost:3000/api/v1/restaurant/" + id, {
-        // ส่งข้อมูลแบบ PUT เพื่ออัปเดต
-        method: "PUT",
-        body: JSON.stringify(restaurant),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-      if (response.ok) {
-        // ถ้าอัปเดตสำเร็จ แจ้งเตือนและล้างฟอร์ม
-        alert("Restaurant Updated successfully");
-        setRestaurant({
-          name: "",
-          type: "",
-          imageUrl: "",
-        });
-      }
-    } catch (error) {
-      // กรณีเกิด error ให้แสดงใน console
-      console.log(error);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const response = await RestaurantService.editRestaurantById(id, restaurant);
+
+    if (response.status === 200) {
+      Swal.fire({
+        title: "Success",
+        text: "Restaurant updated successfully",
+        icon: "success",
+        timer: 2000,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+      })
+      setRestaurant({
+        name: "",
+        type: "",
+        imageUrl: "",
+      })
+       setTimeout(() => {
+        navigate("/");
+      }, 2000);
+      console.log(response.data)
     }
-  };
+  } catch (error) {
+    Swal.fire({
+      title: "Update Failed",
+      text: error?.response?.data?.message || error.message,
+      icon: "error",
+    });
+  }
+};
+
+
   return (
     <div className="container mx-auto pb-7">
 
@@ -127,7 +140,7 @@ const Update = () => {
           </ul>
           <div className="m-5 space-x-3.5">
             {/* ปุ่ม update */}
-            <button className="btn btn-soft btn-primary" onClick={handleSubmit}>
+            <button type="submit" className="btn btn-soft btn-primary" onClick={handleSubmit}>
               update
             </button>
             {/* ปุ่ม Cancel (ยังไม่ทำงาน) */}

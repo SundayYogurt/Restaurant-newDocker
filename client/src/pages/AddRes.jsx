@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-
+import RestaurantService from "../services/restaurant.service";
+import Swal from 'sweetalert2'
+import { useNavigate } from "react-router";
 // AddRes component สำหรับเพิ่มร้านอาหาร
 const AddRes = () => {
+  const navigate = useNavigate()
   // state สำหรับเก็บข้อมูลร้านอาหารใหม่
   const [restaurant, setRestaurant] = useState({
     name: "",
@@ -17,31 +20,34 @@ const AddRes = () => {
   };
 
   // handleSubmit ส่งข้อมูลไป API (POST)
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await fetch("http://localhost:3000/api/v1/restaurant", {
-        method: "POST",
-        body: JSON.stringify(restaurant),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-      if (response.status) {
-        alert("Restaurant added successfully");
-        setRestaurant({
-          name: "",
-          type: "",
-          imageUrl: "",
-        });
+        const response = await RestaurantService.insertRestaurant(restaurant)
+        if (response.status === 200) {
+          Swal.fire({
+            title: "Added restaurant successfully!",
+            icon: "success",
+            text: restaurant?.name
+          }).then(()=>{
+          navigate("/")
+          })
+          setRestaurant({
+            name: "",
+            type: "",
+            imageUrl: "",
+          });
+          console.log(response.data)
       }
     } catch (error) {
       console.log(error);
     }
+    
   };
   return (
     <div className="container mx-auto pb-7">
       {/* ฟอร์มเพิ่มร้านอาหาร */}
-      <form className="max-w-sm mx-auto mt-10 rounded-2xl shadow-lg ">
+      <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-10 rounded-2xl shadow-lg ">
         <div className="text-center items-center space-y-8 m-10 p-10  ">
           <ul className="text-center items-center space-y-8">
             <li>
@@ -98,7 +104,7 @@ const AddRes = () => {
           </ul>
           <div className="m-5 space-x-3.5">
             {/* ปุ่ม OK */}
-            <button className="btn btn-soft btn-primary" onClick={handleSubmit}>
+            <button type="submit" className="btn btn-soft btn-primary">
               OK
             </button>
             {/* ปุ่ม Cancel */}
