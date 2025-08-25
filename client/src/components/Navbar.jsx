@@ -8,7 +8,7 @@ const Navbar = () => {
   // รายการเมนู
   const menuItems = [
     { name: "Add Restaurant", url: "/add" },
-    { name: "Update", url: "/update/:id" },
+    { name: "Cart", url: "/cart" },
     { name: "Home", url: "/" }
   ];
 

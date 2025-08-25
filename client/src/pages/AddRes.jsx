@@ -40,7 +40,11 @@ const AddRes = () => {
           console.log(response.data)
       }
     } catch (error) {
-      console.log(error);
+      Swal.fire({
+            title: "Added restaurant ",
+            icon: "error",
+            text: error?.response?.data
+          })
     }
     
   };
