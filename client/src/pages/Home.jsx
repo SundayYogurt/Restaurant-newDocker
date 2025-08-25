@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Restaurant from "../components/Restaurant";
 import RestaurantService from "../services/restaurant.service"
-
+import Swal from 'sweetalert2'
 // คอมโพเนนต์ Home สำหรับแสดงร้านอาหารและค้นหา
 const Home = () => {
   // state สำหรับเก็บร้านอาหารที่ผ่านการกรอง (filter)

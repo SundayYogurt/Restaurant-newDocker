@@ -1,7 +1,10 @@
 import { useParams } from "react-router";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import Swal from 'sweetalert2'
+// import { useNavigate } from "react-router";
 import RestaurantService from "../services/restaurant.service";
+// 
+// const navigate = useNavigate()
 const Update = () => {
 
   // 1. ดึง id จาก url ด้วย useParams
