@@ -7,12 +7,12 @@ const sequelize = new Sequelize(dbConfig.DB,dbConfig.USER,dbConfig.PASSWORD,{
     port: dbConfig.DBPORT,         // port ของฐานข้อมูล
     dialect: dbConfig.DIALECT,     // dialect ของฐานข้อมูล
     logging: false,      
-    // dialectOptions:{
-    //     ssl:{
-    //         require:true,
-    //         rejectUnauthorized:false,
-    //     }
-    // }          // ปิด log query
+    dialectOptions:{
+        ssl:{
+            require:true,
+            rejectUnauthorized:false,
+        }
+    }          // ปิด log query
 });
 
 // ฟังก์ชันทดสอบการเชื่อมต่อฐานข้อมูล
