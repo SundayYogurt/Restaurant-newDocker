@@ -7,12 +7,12 @@ const sequelize = new Sequelize(dbConfig.DB,dbConfig.USER,dbConfig.PASSWORD,{
     port: dbConfig.DBPORT,         // port ของฐานข้อมูล
     dialect: dbConfig.DIALECT,     // dialect ของฐานข้อมูล
     logging: false,      
-    dialectOptions:{
-        ssl:{
-            required:true,
-            rejectUnauthorized:false,
-        }
-    }          // ปิด log query
+    // dialectOptions:{
+    //     ssl:{
+    //         require:true,
+    //         rejectUnauthorized:false,
+    //     }
+    // }          // ปิด log query
 });
 
 // ฟังก์ชันทดสอบการเชื่อมต่อฐานข้อมูล
@@ -20,7 +20,7 @@ const testConnection = async () => {
     try{
         await sequelize.authenticate() // ทดสอบเชื่อมต่อ
         console.log("Connection successfully") // ถ้าสำเร็จ
-    }catch{
+    }catch(error){
         console.log("Unable connect to the database", console.error()); // ถ้าไม่สำเร็จ
     }
 }

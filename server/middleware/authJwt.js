@@ -1,52 +1,74 @@
-const jwt = require("jsonwebtoken")
-const authConfig = require("../config/auth.config")
-const db = require("../models/index")
-const User = db.User
+const jwt = require("jsonwebtoken");
+const authConfig = require("../config/auth.config");
+const db = require("../models/index");
+const User = db.User;
 
+// ตรวจสอบ token
 const verifyToken = (req, res, next) => {
-    let token = req.headers["x-access-token"];
-    if(!token){
-        return res.status(403).send({message:"No token Provided!"})
+  const token = req.headers["x-access-token"];
+  if (!token) {
+    return res.status(403).json({ message: "No token provided!" });
+  }
+
+  jwt.verify(token, authConfig.secret, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: "Unauthorized!" });
     }
-    jwt.verify(token, authConfig.secret, (err, decoded)=>{
-        if(err){
-            return res.status(401).send({message:"Un authorized!"})
-        }
-        req.username = decoded.username;
+
+    console.log("✅ Token decoded:", decoded); // debug
+    req.username = decoded.username; // เก็บ username จาก token
     next();
-    })
-}
+  });
+};
 
-const isAdmin = (req,res, next) => {
-        User.findByPk(req.username).then((user)=>{
-            console.log(user)
-            user.getRoles().then((roles)=>{
-                for(let i = 0; i<roles.length; i++){
-                    if(roles[i].name === "admin"){
-                        next()
-                        return;
-                    }
-                }
-                return res.status(401).send({message:"Unauthorized access, require admin role!"})
-            })
-        })
+// ตรวจสอบว่า user เป็น admin
+const isAdmin = async (req, res, next) => {
+  try {
+    // ใช้ findOne เผื่อ username ไม่ใช่ PK
+    const user = await User.findOne({ where: { username: req.username } });
+
+    if (!user) {
+      console.log("❌ User not found for username:", req.username);
+      return res.status(404).json({ message: "User not found!" });
     }
 
-    const isAdminOrMod = (req,res, next) => {
-        User.findByPk(req.username).then((user)=>{
-            user.getRoles().then((roles)=>{
-                for(let i = 0; i<roles.length; i++){
-                    if(roles[i].name === "admin" || roles[i].name === "moderator" ){
-                        next()
-                        return;
-                    }
-                }
-                return res.status(401).send({message:"Unauthorized access, require admin role!"})
-            })
-        })
+    const roles = await user.getRoles();
+    if (roles.some((role) => role.name === "admin")) {
+      return next();
     }
 
+    return res.status(401).json({
+      message: "Unauthorized access, require admin role!",
+    });
+  } catch (err) {
+    console.error("Auth error:", err);
+    return res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
 
-const authJwt = {verifyToken, isAdmin, isAdminOrMod};
+// ตรวจสอบว่า user เป็น admin หรือ moderator
+const isAdminOrMod = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ where: { username: req.username } });
 
-module.exports = authJwt;       
+    if (!user) {
+      console.log("❌ User not found for username:", req.username);
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    const roles = await user.getRoles();
+    if (roles.some((role) => role.name === "admin" || role.name === "moderator")) {
+      return next();
+    }
+
+    return res.status(401).json({
+      message: "Unauthorized access, require admin or moderator role!",
+    });
+  } catch (err) {
+    console.error("Auth error:", err);
+    return res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+const authJwt = { verifyToken, isAdmin, isAdminOrMod };
+module.exports = authJwt;

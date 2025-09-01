@@ -80,26 +80,27 @@ restaurantController.updateById = async (req, res) => {
 
 // ลบร้านอาหารตาม id
 restaurantController.deleteById = async (req, res) => {
-    try {
-        const id = req.params.id
-        if (!id) {
-            res.status(400).send({ message: "Id is missing" });
-            return;
-        }
-        await Restaurant.destroy({ where: { id } }).then((num) => {
-            if (num === 1) {
-                res.status(200).send({ message: "Restaurant was deleted" })
-            } else {
-                res.status(404).send({ message: "Can't delete restaurant with id" + id + "." })
-            }
-        }).catch((error) => {
-            res.status(500).send({ message: "Server Error" })
-        })
-    } catch (error) {
-        res.status(500).send({ message: "Server Error" })
+  try {
+    const id = req.params.id;
+
+    if (!id) {
+      return res.status(400).json({ message: "Id is missing" });
     }
 
-}
+    const num = await Restaurant.destroy({ where: { id } });
+
+    if (num === 1) {
+      return res.status(200).json({ message: "Restaurant was deleted successfully" });
+    } else {
+      return res.status(404).json({ message: `Can't delete restaurant with id ${id}.` });
+    }
+  } catch (error) {
+    console.error("Delete error:", error);
+    return res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
+
 
 module.exports = restaurantController; // ส่งออก controller
 
