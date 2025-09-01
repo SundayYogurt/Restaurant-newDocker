@@ -63,12 +63,12 @@ restaurantController.updateById = async (req, res) => {
             res.status(400).send({ message: "Name, Type and ImageUrl can't be empty!" });
             return;
         }
-        await Restaurant.update({ name, type, imageUrl }, { where: { id } }).then((num)=>{
+        await Restaurant.update({ name, type, imageUrl }, { where: { id } }).then((num) => {
             console.log(num)
-            if(num[0] === 1){
-                res.send({message:"Restaurant update successfully!"})
-            }else{
-                res.status(404).send({message:"Can't update Restaurant id "+id+" Maybe restaurant not found or request.body is empty"})
+            if (num[0] === 1) {
+                res.send({ message: "Restaurant update successfully!" })
+            } else {
+                res.status(404).send({ message: "Can't update Restaurant id " + id + " Maybe restaurant not found or request.body is empty" })
             }
         })
     } catch (error) {
@@ -79,22 +79,26 @@ restaurantController.updateById = async (req, res) => {
 }
 
 // ลบร้านอาหารตาม id
-restaurantController.deleteById = async (req,res) => {
-
-    const id = req.params.id
-    if(!id){
-        res.status(400).send({message:"Id is missing"});
-        return;
-    }
-    await Restaurant.destroy({where:{id}}).then((num)=>{
-        if(num === 1){
-            res.status(200).send({message:"Restaurant was deleted"})
-        }else{
-            res.status(404).send({message:"Can't delete restaurant with id"+id+"."})
+restaurantController.deleteById = async (req, res) => {
+    try {
+        const id = req.params.id
+        if (!id) {
+            res.status(400).send({ message: "Id is missing" });
+            return;
         }
-    }).catch((error)=>{
-        res.status(500).send({message:"Server Error"})
-    })
+        await Restaurant.destroy({ where: { id } }).then((num) => {
+            if (num === 1) {
+                res.status(200).send({ message: "Restaurant was deleted" })
+            } else {
+                res.status(404).send({ message: "Can't delete restaurant with id" + id + "." })
+            }
+        }).catch((error) => {
+            res.status(500).send({ message: "Server Error" })
+        })
+    } catch (error) {
+        res.status(500).send({ message: "Server Error" })
+    }
+
 }
 
 module.exports = restaurantController; // ส่งออก controller
