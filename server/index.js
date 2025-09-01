@@ -5,7 +5,7 @@ const app = express()              // สร้าง instance ของ express
 dotenv.config();                   // โหลดค่าตัวแปรจากไฟล์ .env เข้าสู่ process.env
 const cors = require('cors')
 const PORT = process.env.PORT || 3000; // กำหนด port ที่จะใช้รัน server
-
+const FRONTEND_URL = process.env.FRONTEND_URL
 const restaurantRouter = require("./routers/restaurant.router") // import router สำหรับ restaurant API
 const authRouter = require("./routers/auth.router")             // import router สำหรับ auth API
 
@@ -26,7 +26,7 @@ const initRole = () => {
 // })
 
 app.use(cors({
-  origin:["http://localhost:5173","127.0.0.1:5173"],
+  origin:["http://localhost:5173","127.0.0.1:5173", FRONTEND_URL],
   methods:["GET","POST","PUT","DELETE"],
   allowedHeaders:["Content-Type","Authorization","x-access-token"]
 }))
