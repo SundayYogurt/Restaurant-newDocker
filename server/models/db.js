@@ -6,7 +6,13 @@ const sequelize = new Sequelize(dbConfig.DB,dbConfig.USER,dbConfig.PASSWORD,{
     host: dbConfig.HOST,           // host ของฐานข้อมูล
     port: dbConfig.DBPORT,         // port ของฐานข้อมูล
     dialect: dbConfig.DIALECT,     // dialect ของฐานข้อมูล
-    logging: false,                // ปิด log query
+    logging: false,      
+    dialectOptions:{
+        ssl:{
+            required:true,
+            rejectUnauthorized:false,
+        }
+    }          // ปิด log query
 });
 
 // ฟังก์ชันทดสอบการเชื่อมต่อฐานข้อมูล
